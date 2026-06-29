@@ -68,7 +68,8 @@ class LoginScreen extends StatelessWidget {
                 CustomButton(
                   text: 'Login',
                   onPressed: () {
-                    // Firebase login will be added later
+                     Navigator.pushReplacementNamed(context, AppRoutes.patientDashboard);
+                     // Firebase login will be added later
                   },
                 ),
                 const SizedBox(height: 18),
