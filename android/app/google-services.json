@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1006572169850",
+    "project_id": "medicare-connect-d8a0b",
+    "storage_bucket": "medicare-connect-d8a0b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006572169850:android:d530f2f5dbdf99b81c29c3",
+        "android_client_info": {
+          "package_name": "com.example.medicare_connect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCZ3ic1IsVKlbLIBCg_7oExrKKY13RLUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

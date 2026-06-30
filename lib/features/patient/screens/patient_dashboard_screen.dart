@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../app/theme.dart';
 
+import 'doctor_list_screen.dart';
+
 class PatientDashboardScreen extends StatelessWidget {
   const PatientDashboardScreen({super.key});
 
@@ -39,7 +41,14 @@ class PatientDashboardScreen extends StatelessWidget {
               icon: Icons.calendar_month,
               title: 'Book Appointment',
               subtitle: 'Find doctors and schedule your visit',
-              onTap: () {},
+              onTap: () { 
+                Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const DoctorListScreen(),
+    ),
+  );
+},
             ),
             _DashboardCard(
               icon: Icons.history,
