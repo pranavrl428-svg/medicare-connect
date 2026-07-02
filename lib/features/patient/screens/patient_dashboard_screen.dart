@@ -65,7 +65,7 @@ class PatientDashboardScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DoctorListScreen(),
+                   builder: (context) => DoctorListScreen(),
                   ),
                 );
               },
