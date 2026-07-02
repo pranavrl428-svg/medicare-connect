@@ -4,16 +4,71 @@ import '../../../app/routes.dart';
 import '../../../app/theme.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
+import '../../../services/auth_service.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final AuthService _authService = AuthService();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isLoading = false;
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _authService.loginUser(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      Navigator.pushReplacementNamed(
+        context,
+        AppRoutes.patientDashboard,
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Login failed: $e"),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text("Login"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -22,62 +77,69 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               children: [
                 const Icon(
-                  Icons.health_and_safety_rounded,
+                  Icons.lock_outline,
                   size: 70,
                   color: AppColors.primary,
                 ),
                 const SizedBox(height: 20),
+
                 const Text(
-                  'Welcome Back',
+                  "Welcome Back",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textDark,
                   ),
                 ),
+
                 const SizedBox(height: 8),
+
                 const Text(
-                  'Login to continue',
+                  "Login to continue",
                   style: TextStyle(
-                    fontSize: 16,
                     color: AppColors.textLight,
                   ),
                 ),
+
                 const SizedBox(height: 30),
-                const CustomTextField(
-                  label: 'Email',
+
+                CustomTextField(
+                  controller: _emailController,
+                  label: "Email",
                   icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
                 ),
+
                 const SizedBox(height: 16),
-                const CustomTextField(
-                  label: 'Password',
+
+                CustomTextField(
+                  controller: _passwordController,
+                  label: "Password",
                   icon: Icons.lock_outline,
                   obscureText: true,
                 ),
-                const SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.forgotPassword);
-                    },
-                    child: const Text('Forgot Password?'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                CustomButton(
-                  text: 'Login',
-                  onPressed: () {
-                     Navigator.pushReplacementNamed(context, AppRoutes.patientDashboard);
-                     // Firebase login will be added later
-                  },
-                ),
-                const SizedBox(height: 18),
+
+                const SizedBox(height: 25),
+
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : CustomButton(
+                        text: "Login",
+                        onPressed: _login,
+                      ),
+
+                const SizedBox(height: 20),
+
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.register);
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.register,
+                    );
                   },
-                  child: const Text("Don't have an account? Register"),
+                  child: const Text(
+                    "Don't have an account? Register",
+                  ),
                 ),
               ],
             ),
