@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/routes.dart';
 import '../../../app/theme.dart';
-
+import '../../../services/auth_service.dart';
 import 'doctor_list_screen.dart';
 
 class PatientDashboardScreen extends StatelessWidget {
-  const PatientDashboardScreen({super.key});
+  PatientDashboardScreen({super.key});
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +16,23 @@ class PatientDashboardScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Patient Dashboard'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () async {
+              await _authService.logoutUser();
+
+              if (!context.mounted) return;
+
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.login,
+                (route) => false,
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -41,14 +61,14 @@ class PatientDashboardScreen extends StatelessWidget {
               icon: Icons.calendar_month,
               title: 'Book Appointment',
               subtitle: 'Find doctors and schedule your visit',
-              onTap: () { 
+              onTap: () {
                 Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const DoctorListScreen(),
-    ),
-  );
-},
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DoctorListScreen(),
+                  ),
+                );
+              },
             ),
             _DashboardCard(
               icon: Icons.history,

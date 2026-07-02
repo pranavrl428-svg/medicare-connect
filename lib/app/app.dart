@@ -25,7 +25,7 @@ class MediCareConnectApp extends StatelessWidget {
         AppRoutes.login: (context) => const LoginScreen(),
         AppRoutes.register: (context) => const RegisterScreen(),
         AppRoutes.forgotPassword: (context) => const ForgotPasswordScreen(),
-        AppRoutes.patientDashboard: (context) => const PatientDashboardScreen(),
+        AppRoutes.patientDashboard: (context) => PatientDashboardScreen(),
       },
     );
   }
