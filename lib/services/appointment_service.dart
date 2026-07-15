@@ -19,19 +19,34 @@ class AppointmentService {
       throw Exception('User not logged in');
     }
 
+    final userDocument =
+        await _firestore.collection('users').doc(user.uid).get();
+
+    if (!userDocument.exists) {
+      throw Exception('Patient profile not found');
+    }
+
+    final userData = userDocument.data()!;
+    final patientName = userData['name']?.toString().trim();
+
     final appointment = Appointment(
       id: '',
       patientId: user.uid,
+      patientName: patientName == null || patientName.isEmpty
+          ? 'Patient'
+          : patientName,
       doctorId: doctor.id,
       doctorName: doctor.name,
       specialization: doctor.specialization,
       hospital: doctor.hospital,
       appointmentDate: appointmentDate,
       appointmentTime: appointmentTime,
-      status: 'Upcoming',
+      status: 'Pending',
     );
 
-    await _firestore.collection('appointments').add(appointment.toMap());
+    await _firestore
+        .collection('appointments')
+        .add(appointment.toMap());
   }
 
   Stream<List<Appointment>> getMyAppointments() {
@@ -46,23 +61,64 @@ class AppointmentService {
         .where('patientId', isEqualTo: user.uid)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Appointment.fromMap(doc.id, doc.data());
+      return snapshot.docs.map((document) {
+        return Appointment.fromMap(
+          document.id,
+          document.data(),
+        );
       }).toList();
     });
   }
 
   Stream<List<Appointment>> getAllAppointments() {
-    return _firestore.collection('appointments').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Appointment.fromMap(doc.id, doc.data());
+    return _firestore
+        .collection('appointments')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((document) {
+        return Appointment.fromMap(
+          document.id,
+          document.data(),
+        );
       }).toList();
     });
   }
 
-  Future<void> cancelAppointment(String appointmentId) async {
-    await _firestore.collection('appointments').doc(appointmentId).update({
-      'status': 'Cancelled',
+  Stream<List<Appointment>> getDoctorAppointments(
+    String doctorId,
+  ) {
+    return _firestore
+        .collection('appointments')
+        .where('doctorId', isEqualTo: doctorId)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((document) {
+        return Appointment.fromMap(
+          document.id,
+          document.data(),
+        );
+      }).toList();
     });
+  }
+
+  Future<void> updateAppointmentStatus({
+    required String appointmentId,
+    required String status,
+  }) async {
+    await _firestore
+        .collection('appointments')
+        .doc(appointmentId)
+        .update({
+      'status': status,
+    });
+  }
+
+  Future<void> cancelAppointment(
+    String appointmentId,
+  ) async {
+    await updateAppointmentStatus(
+      appointmentId: appointmentId,
+      status: 'Cancelled',
+    );
   }
 }

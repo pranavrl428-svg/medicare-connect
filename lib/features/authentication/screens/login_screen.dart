@@ -5,6 +5,7 @@ import '../../../app/theme.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../services/auth_service.dart';
+import '../../doctor/screens/doctor_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text("Login"),
       ),
@@ -81,23 +82,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   size: 70,
                   color: AppColors.primary,
                 ),
+
                 const SizedBox(height: 20),
 
-                const Text(
+                Text(
                   "Welcome Back",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textDark,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
 
                 const SizedBox(height: 8),
 
-                const Text(
+                Text(
                   "Login to continue",
                   style: TextStyle(
-                    color: AppColors.textLight,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant,
                   ),
                 ),
 
@@ -127,6 +131,31 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: "Login",
                         onPressed: _login,
                       ),
+
+                const SizedBox(height: 12),
+
+                /// TEMPORARY BUTTON
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(
+                      double.infinity,
+                      52,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            DoctorDashboardScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.medical_services),
+                  label: const Text(
+                    "Open Doctor Dashboard (Demo)",
+                  ),
+                ),
 
                 const SizedBox(height: 20),
 

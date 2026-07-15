@@ -1,6 +1,7 @@
 class Appointment {
   final String id;
   final String patientId;
+  final String patientName;
   final String doctorId;
   final String doctorName;
   final String specialization;
@@ -12,6 +13,7 @@ class Appointment {
   Appointment({
     required this.id,
     required this.patientId,
+    required this.patientName,
     required this.doctorId,
     required this.doctorName,
     required this.specialization,
@@ -24,6 +26,7 @@ class Appointment {
   Map<String, dynamic> toMap() {
     return {
       'patientId': patientId,
+      'patientName': patientName,
       'doctorId': doctorId,
       'doctorName': doctorName,
       'specialization': specialization,
@@ -34,17 +37,21 @@ class Appointment {
     };
   }
 
-  factory Appointment.fromMap(String id, Map<String, dynamic> map) {
+  factory Appointment.fromMap(
+    String id,
+    Map<String, dynamic> map,
+  ) {
     return Appointment(
       id: id,
       patientId: map['patientId'] ?? '',
+      patientName: map['patientName'] ?? 'Unknown Patient',
       doctorId: map['doctorId'] ?? '',
       doctorName: map['doctorName'] ?? '',
       specialization: map['specialization'] ?? '',
       hospital: map['hospital'] ?? '',
       appointmentDate: map['appointmentDate'] ?? '',
       appointmentTime: map['appointmentTime'] ?? '',
-      status: map['status'] ?? 'Upcoming',
+      status: map['status'] ?? 'Pending',
     );
   }
 }
